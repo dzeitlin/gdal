@@ -26,15 +26,7 @@ GDALLIB	= $(GDAL_ROOT)\gdal_i.lib
 !IFDEF MONO
 CSC = mcs
 !ELSE
-!IF $(MSVC_VER) >= 1400
-!IFDEF WIN64
-CSC = csc /platform:anycpu
-!ELSE
-CSC = csc /platform:x86
-!ENDIF
-!ELSE
 CSC = csc
-!ENDIF
 !ENDIF
 
 !IFDEF DEBUG
@@ -53,6 +45,11 @@ OBJ	=	gdal_wrap.obj gdalconst_wrap.obj ogr_wrap.obj osr_wrap.obj
 all: ogr_dir gdal_dir osr_dir const_dir gdal_csharp samples
 
 gdal_csharp:
+#   make GdalPINVOKE, OgrPINVOKE and OsrPINVOKE classes public
+    replace_text.vbs "gdal\GdalPINVOKE.cs" "class GdalPINVOKE {" "public class GdalPINVOKE {"
+    replace_text.vbs "ogr\OgrPINVOKE.cs" "class OgrPINVOKE {" "public class OgrPINVOKE {"
+    replace_text.vbs "osr\OsrPINVOKE.cs" "class OsrPINVOKE {" "public class OsrPINVOKE {"
+
     $(CSC) $(CSDEBUG) /target:library /out:osr_csharp.dll osr\*.cs AssemblyInfo.cs
     $(CSC) $(CSDEBUG) /target:library /out:ogr_csharp.dll /r:osr_csharp.dll ogr\*.cs AssemblyInfo.cs
     $(CSC) $(CSDEBUG) /target:library /out:gdal_csharp.dll /r:ogr_csharp.dll gdal\*.cs AssemblyInfo.cs
