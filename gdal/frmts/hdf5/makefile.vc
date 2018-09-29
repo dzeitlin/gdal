@@ -7,7 +7,7 @@ OBJ		=	hdf5dataset.obj  hdf5imagedataset.obj \
 
 PLUGIN_DLL 	=	gdal_HDF5.dll
 
-EXTRAFLAGS 	= 	-I$(HDF5_DIR)\include -DWIN32 -D_HDF5USEDLL_ 
+EXTRAFLAGS 	= 	-I$(HDF5_DIR)\src -I$(HDF5_DIR)\x64 -DWIN32 -DH5_BUILT_AS_DYNAMIC_LIB
 
 !IF "$(HDF5_PLUGIN)" == "YES"
 EXTRAFLAGS = $(EXTRAFLAGS) -DHDF5_PLUGIN
