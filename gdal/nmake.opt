@@ -325,7 +325,8 @@ ECWFLAGS = -DECWSDK_VERSION=54 \
        -I$(ECWDIR)\include \
        -I$(ECWDIR)\include/NCSECW/api -I$(ECWDIR)\include/NCSECW/jp2 \
        -I$(ECWDIR)\include/NCSECW/ecw
-ECWLIB = $(ECWDIR)\lib\vc141\x64\NCSEcw.lib
+ECWLIB = $(ECWDIR)\lib\vc141\Win32\NCSEcw.lib
+#ECWLIB = $(ECWDIR)\lib\vc141\x64\NCSEcw.lib
 
 # To build ECW support as a plugin uncomment the following, and make sure
 # to do "nmake /f makefile.vc plugin" in gdal/frmts/ecw and copy the two
@@ -546,7 +547,8 @@ PROJ_FLAGS = -DPROJ_STATIC -DPROJ_VERSION=5
 #PROJ_FLAGS = -DPROJ_STATIC -DPROJ_VERSION=4
 
 PROJ_INCLUDE = -ID:\dev\src\proj.4\src
-PROJ_LIBRARY = D:\dev\src\proj.4\x64\lib\Release\proj_5_2.lib
+PROJ_LIBRARY = D:\dev\src\proj.4\x86\lib\Release\proj_5_2.lib
+#PROJ_LIBRARY = D:\dev\src\proj.4\x64\lib\Release\proj_5_2.lib
 
 # Add ORACLE support.
 # Uncomment the following line to enable OCI Oracle Spatial support.
@@ -572,8 +574,9 @@ OCI_INCLUDE =	-I$(ORACLE_HOME)\oci\include
 FGDB_ENABLED = YES
 FGDB_PLUGIN = YES
 FGDB_SDK = D:\dev\src\FileGDB_API_1_5_1-VS2017
-FGDB_INC = $(FGDB_SDK)\include 
-FGDB_LIB = $(FGDB_SDK)\lib64\FileGDBAPI.lib
+FGDB_INC = $(FGDB_SDK)\include
+FGDB_LIB = $(FGDB_SDK)\lib\FileGDBAPI.lib
+#FGDB_LIB = $(FGDB_SDK)\lib64\FileGDBAPI.lib
 
 #uncomment to build AmigoCloud as a plugin instead
 #AMIGOCLOUD_PLUGIN = YES
