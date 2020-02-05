@@ -565,6 +565,7 @@ std::string FGDBLaunderName(const std::string& name)
         newName = "_" + newName;
     }
 
+    /* this code brakes UTF-8 support
     for(size_t i=0; i < newName.size(); i++)
     {
         if ( !( newName[i] == '_' ||
@@ -574,7 +575,7 @@ std::string FGDBLaunderName(const std::string& name)
         {
             newName[i] = '_';
         }
-    }
+    }*/
 
     return newName;
 }
