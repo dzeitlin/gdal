@@ -320,13 +320,13 @@ JPEG12_SUPPORTED = 1
 # also need some adjustment. 
 
 # Uncomment the following and update to enable ECW read support with the 5.0 SDK
-ECWDIR = "C:\Users\danie\AppData\Local\Hexagon\ERDAS ECW JPEG 2000 SDK 5.4.0\Desktop Read-Only"
-ECWFLAGS = -DECWSDK_VERSION=54 \
+ECWDIR = "C:\Users\danie\AppData\Local\Hexagon\ERDAS ECW JPEG 2000 SDK 5.5.0\Desktop Read-Only"
+ECWFLAGS = -DECWSDK_VERSION=55 \
        -I$(ECWDIR)\include \
        -I$(ECWDIR)\include/NCSECW/api -I$(ECWDIR)\include/NCSECW/jp2 \
        -I$(ECWDIR)\include/NCSECW/ecw
-ECWLIB = $(ECWDIR)\lib\vc141\Win32\NCSEcw.lib
-#ECWLIB = $(ECWDIR)\lib\vc141\x64\NCSEcw.lib
+#ECWLIB = $(ECWDIR)\lib\vc141\Win32\NCSEcw.lib
+ECWLIB = $(ECWDIR)\lib\vc141\x64\NCSEcw.lib
 
 # To build ECW support as a plugin uncomment the following, and make sure
 # to do "nmake /f makefile.vc plugin" in gdal/frmts/ecw and copy the two
@@ -416,13 +416,13 @@ ECW_PLUGIN = YES
 # In such case :
 #   o do NOT define KAKOBJDIR
 #   o define KAKLIB with BOTH Kakadu DLLs
-#KAKFLAGS=-DKDU_MAJOR_VERSION=7 -DKDU_MINOR_VERSION=9 -DKDU_PATCH_VERSION=1
-#KAKDIR = C:\0_PGH\SRC_CSD\CSD_INTEGRATION\cots\kakadu\download\dev
-#KAKLIB = $(KAKDIR)\lib_x64\kdu_v79R.lib 	$(KAKDIR)\lib_x64\kdu_a79R.lib
-#KAKSRC = $(KAKDIR)\v7_9_1-01156C
+KAKFLAGS=-DKDU_MAJOR_VERSION=7 -DKDU_MINOR_VERSION=10 -DKDU_PATCH_VERSION=5
+KAKDIR = D:\dev\kakadu
+KAKLIB = $(KAKDIR)\lib_x64\kdue_v7AR.lib 	$(KAKDIR)\lib_x64\kdue_a7AR.lib
+KAKSRC = $(KAKDIR)\src
 #KAKOBJDIR =  $(KAKDIR)\v7_generated_x86
 KAKADU_7_5_OR_LATER = YES
-#JP2KAK_PLUGIN = YES
+JP2KAK_PLUGIN = YES
 
 # Uncomment the following and update to enable NCSA HDF Release 4 support.
 #HDF4_PLUGIN = NO

@@ -6,7 +6,7 @@
  *
  ******************************************************************************
  * Copyright (c) 2001, 2004, Frank Warmerdam <warmerdam@pobox.com>
- * Copyright (c) 2008-2013, Even Rouault <even dot rouault at mines-paris dot org>
+ * Copyright (c) 2008-2013, Even Rouault <even dot rouault at spatialys.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -75,7 +75,7 @@ CPLString GetCompressionSoftwareName(){
 }
 #endif
 
-class GDALECWCompressor : public CNCSFile {
+class GDALECWCompressor final: public CNCSFile {
 
 public:
     GDALECWCompressor();
@@ -115,7 +115,7 @@ public:
 
     GDALDataset *m_poSrcDS;
 
-    VSIIOStream m_OStream;
+    std::shared_ptr<VSIIOStream> m_OStream;
     int m_nPercentComplete;
 
     int m_bCancelled;
@@ -143,7 +143,7 @@ private:
 /************************************************************************/
 
 GDALECWCompressor::GDALECWCompressor() :
-    eWorkDT(GDT_Unknown)
+    m_OStream(std::make_shared<VSIIOStream>()), eWorkDT(GDT_Unknown)
 {
     m_poSrcDS = nullptr;
     m_nPercentComplete = -1;
@@ -186,7 +186,7 @@ CPLErr GDALECWCompressor::CloseDown()
 
 {
     Close( true );
-    m_OStream.Close();
+    m_OStream->Close();
 
     return CE_None;
 }
@@ -1008,7 +1008,7 @@ CPLErr GDALECWCompressor::Initialize(
             return CE_Failure;
         }
 
-        m_OStream.Access( fpVSIL, TRUE, (BOOLEAN) bSeekable, pszFilename,
+        m_OStream->Access( fpVSIL, TRUE, (BOOLEAN) bSeekable, pszFilename,
                           0, -1 );
     }
     else
@@ -1114,8 +1114,13 @@ CPLErr GDALECWCompressor::Initialize(
                 oError = GetCNCSError(Open( (char *) pszFilename, false, true ));
             }
         }
-        else
-            oError = CNCSJP2FileView::Open( &(m_OStream) );
+        else {
+#if ECWSDK_VERSION>=55
+            oError = CNCSJP2FileView::Open(m_OStream);
+#else
+            oError = CNCSJP2FileView::Open(m_OStream.get());
+#endif
+        }
     }
 
     if( oError.GetErrorNumber() == NCS_SUCCESS )
@@ -1584,7 +1589,7 @@ class IRasterIORequest
 };
 #endif
 
-class ECWWriteDataset : public GDALDataset
+class ECWWriteDataset final: public GDALDataset
 {
     friend class ECWWriteRasterBand;
 
@@ -1620,9 +1625,15 @@ class ECWWriteDataset : public GDALDataset
     virtual void   FlushCache( void ) override;
 
     virtual CPLErr GetGeoTransform( double * ) override;
-    virtual const char* GetProjectionRef() override;
+    virtual const char* _GetProjectionRef() override;
     virtual CPLErr SetGeoTransform( double * ) override;
-    virtual CPLErr SetProjection( const char *pszWKT ) override;
+    virtual CPLErr _SetProjection( const char *pszWKT ) override;
+    const OGRSpatialReference* GetSpatialRef() const override {
+        return GetSpatialRefFromOldGetProjectionRef();
+    }
+    CPLErr SetSpatialRef(const OGRSpatialReference* poSRS) override {
+        return OldSetProjectionFromSetSpatialRef(poSRS);
+    }
 
 #ifdef OPTIMIZED_FOR_GDALWARP
     virtual CPLErr IRasterIO( GDALRWFlag eRWFlag,
@@ -1642,7 +1653,7 @@ class ECWWriteDataset : public GDALDataset
 /* ==================================================================== */
 /************************************************************************/
 
-class ECWWriteRasterBand : public GDALRasterBand
+class ECWWriteRasterBand final: public GDALRasterBand
 {
     friend class ECWWriteDataset;
 
@@ -1768,7 +1779,7 @@ void ECWWriteDataset::FlushCache()
 /*                         GetProjectionRef()                           */
 /************************************************************************/
 
-const char*  ECWWriteDataset::GetProjectionRef()
+const char*  ECWWriteDataset::_GetProjectionRef()
 {
     return pszProjection;
 }
@@ -1799,7 +1810,7 @@ CPLErr ECWWriteDataset::SetGeoTransform( double *padfGeoTransform )
 /*                           SetProjection()                            */
 /************************************************************************/
 
-CPLErr ECWWriteDataset::SetProjection( const char *pszWKT )
+CPLErr ECWWriteDataset::_SetProjection( const char *pszWKT )
 
 {
     CPLFree( pszProjection );
