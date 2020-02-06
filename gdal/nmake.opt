@@ -418,6 +418,7 @@ ECW_PLUGIN = YES
 #   o define KAKLIB with BOTH Kakadu DLLs
 KAKFLAGS=-DKDU_MAJOR_VERSION=7 -DKDU_MINOR_VERSION=10 -DKDU_PATCH_VERSION=5
 KAKDIR = D:\dev\kakadu
+#KAKLIB = $(KAKDIR)\lib_x86\kdue_v7AR.lib 	$(KAKDIR)\lib_x86\kdue_a7AR.lib
 KAKLIB = $(KAKDIR)\lib_x64\kdue_v7AR.lib 	$(KAKDIR)\lib_x64\kdue_a7AR.lib
 KAKSRC = $(KAKDIR)\src
 #KAKOBJDIR =  $(KAKDIR)\v7_generated_x86
